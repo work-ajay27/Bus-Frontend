@@ -14,7 +14,7 @@ export default function SignupOTPPage() {
     const { loginWithRedirect } = useAuth0();
 
     // 🔥 FORM VALIDATION ONLY
-    const handleSignup = () => {
+    const handleSignup = async () => {
         setError("");
 
         // Email validation
@@ -41,6 +41,31 @@ export default function SignupOTPPage() {
         }
 
         alert("Signup Successful!");
+
+        //  SEND DATA TO BACKEND
+        try {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}auth/signup`, {
+            
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    email: email,
+                    password: password
+                }),
+            });
+
+            const message = await response.text();
+            alert(message); // Temporary success message
+
+        } catch (error) {
+            console.error(error);
+            alert("Signup failed. Try again later!");
+        }
+
+
+
     };
 
     return (
@@ -131,4 +156,3 @@ export default function SignupOTPPage() {
         </div>
     );
 }
- 

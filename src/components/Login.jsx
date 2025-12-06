@@ -9,6 +9,39 @@ export default function LoginOTPPage() {
     const [showPassword, setShowPassword] = useState(false);
     const { loginWithRedirect } = useAuth0();
 
+    // 🔥 Call Backend Login API
+    const handleLogin = async () => {
+        if (!email || !password) {
+            alert("Please enter email and password");
+            return;
+        }
+
+        try {
+            // const response = await fetch("http://localhost:8080/auth/login", {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}auth/login`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    email: email,
+                    password: password,
+                }),
+            });
+
+            const message = await response.text();
+            alert(message);
+
+            if (message === "Login successful") {
+                window.location.href = "/"; // redirect after successful login
+            }
+
+        } catch (error) {
+            console.error(error);
+            alert("Login failed. Try again later!");
+        }
+    };
+
     return (
         <div className="signup-container">
             {/* LEFT SIDE */}
@@ -33,7 +66,7 @@ export default function LoginOTPPage() {
                     <h2 className="black-color">Login</h2>
 
                     <>
-                        {/* Email Login */}
+                        {/* Continue with Email — Auth0 */}
                         <button
                             className="social-login"
                             onClick={() => loginWithRedirect()}
@@ -77,7 +110,8 @@ export default function LoginOTPPage() {
                             </label>
                         </div>
 
-                        <button className="signup-btn">
+                        {/* 🔥 Login Button */}
+                        <button className="signup-btn" onClick={handleLogin}>
                             Login
                         </button>
                     </>
