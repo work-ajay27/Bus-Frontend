@@ -1,3 +1,4 @@
 * {
   font-family: "Urbanist", "Roboto", sans-serif;
+  @import "tailwindcss";
 }
